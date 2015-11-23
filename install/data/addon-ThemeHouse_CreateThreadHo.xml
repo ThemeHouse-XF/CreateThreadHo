@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_CreateThreadHo" title="[⌂] Create Thread from Forum List" version_string="1.0.2" version_id="1447261019" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_CreateThreadHo_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_CreateThreadHo_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Forum" description="XenForo_ControllerPublic_Forum (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_CreateThreadHo_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="th_choose_forum_createthreadhome" version_id="1424374772" version_string="1.0.0"><![CDATA[Choose Forum]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="th_thread_choose_forum_createthreadhome" version_id="1424374772" version_string="1.0.0"><![CDATA[<xen:title>{xen:phrase th_choose_forum_createthreadhome}</xen:title>
+
+<form action="{xen:link 'forums/-/create-thread'}" method="post" class="xenForm formOverlay">
+
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_node_id">{xen:phrase forum}:</label></dt>
+		<dd>
+			<select name="node_id" class="textCtrl" id="ctrl_node_id" autofocus="true">
+				<option value="0">&nbsp;</option>
+				<xen:foreach loop="$nodes" key="$nodeId" value="$_node">
+					<option value="{$nodeId}"
+						{xen:if '({$_node.node_type_id} != "Forum" or !{$_node.canPostThread}', 'disabled="disabled"'}
+						>{xen:string repeat, '&nbsp; ', $_node.depth}{$_node.title}</option>
+				</xen:foreach>
+			</select>
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd>
+			<input type="submit" value="{xen:phrase continue}..." accesskey="s" class="button primary" />
+		</dd>
+	</dl>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_createThreadHo" description="Copyright notice for [⌂] Create Thread from Forum List" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="footer" modification_key="th_copyrightNotice_createThreadHome" description="Copyright notice for Create Thread from Forum List by ThemeHouse" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="forum_list" modification_key="th_forumlist_createthreadhome" description="Adds 'Create Thread' button to forum list." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#^#]]></find>
+      <replace><![CDATA[<xen:if is="{$canPostThread}">
+	<xen:topctrl><a href="{xen:link 'forums/-/create-thread'}" class="callToAction OverlayTrigger"><span>{xen:phrase post_new_thread}</span></a></xen:topctrl>
+</xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
